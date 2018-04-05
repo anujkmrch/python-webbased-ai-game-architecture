@@ -28,7 +28,7 @@ class nim:
 
         # loop through possible states
         for pick in range(1,3+1):
-            # print str(level) ,str(state["sticks"])+" sticks passed and on","picking "+ str(pick),"on depth "+ str(depth), "only "+str(state["sticks"] -pick) + " left", "by player",("max" if p==1 else "min")
+            print str(level) ,str(state["sticks"])+" sticks passed and on","picking "+ str(pick),"on depth "+ str(depth), "only "+str(state["sticks"] -pick) + " left", "by player",("max" if p==1 else "min")
             ## go recursive
             t = self.successor({"player":p*-1,"sticks":state["sticks"]-pick},depth-1,level+"  ")
             s.append(t)
