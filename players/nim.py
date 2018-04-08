@@ -1,12 +1,15 @@
 import copy
-
+from node import Node
 class nim:
-    def __init__(self):
+    def __init__(self,max_depth=4):
         ''' Constructor for this class. '''
-        self.max_depth = 4
+        self.max_depth = max_depth
 
-    def play(self, state):
-        s = self.successor(state,5,"")
+    def setMaxDepth(self,max_depth=4):
+       self.max_depth = max_depth
+
+    def generate(self, state):
+        s = self.successor(state,self.max_depth,"")
         return s
 
     def successor(self, state,depth,level):
@@ -14,24 +17,33 @@ class nim:
         ## if depth reached or there is not stick then simply
         ## end the tree
         if depth <= 0:
-            # print "Depth "+ str(depth)+ "Stick Reached "+str(state["sticks"])
-            return state
+            return None
 
-        if state["sticks"] < 1:
-            return state
-
-        ## initialize the successors list for the current state
-        s = []
+        if state["sticks"] < 0:
+            return None
 
         # current player
-        p = state["player"]
+        player = state["player"]
+
+        #intialize the current state node
+        current = Node(player,state["sticks"])
 
         # loop through possible states
-        for pick in range(1,3+1):
-            print str(level) ,str(state["sticks"])+" sticks passed and on","picking "+ str(pick),"on depth "+ str(depth), "only "+str(state["sticks"] -pick) + " left", "by player",("max" if p==1 else "min")
-            ## go recursive
-            t = self.successor({"player":p*-1,"sticks":state["sticks"]-pick},depth-1,level+"  ")
-            s.append(t)
+        for pick in range(1,2+1):
+
+            ## go recursive to generate the successors for each state
+            child = self.successor({"player":player*-1,"sticks":state["sticks"]-pick},depth-1,level+"  ")
+
+            #check if there is possible successor state generated
+            if child:
+                #add child to the current node and make it a tree
+                current.addChild(child)
 
         ## return current successor tree
-        return s
+        return current
+
+    def move(self, node,level=""):
+        if node:
+            print node.name,node.weight
+            for child in node.children:
+                self.move(child,level+"+>")
